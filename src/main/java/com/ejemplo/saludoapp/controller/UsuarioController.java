@@ -86,4 +86,10 @@ public class UsuarioController {
         UsuarioDTO usuarioDTO = usuarioService.actualizar(id, usuario);
         return ResponseEntity.ok(usuarioDTO);
     }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<UsuarioDTO>> listarTodosLosUsuario(){
+        List<UsuarioDTO> usuarioDTO = usuarioService.listarTodosUsuarios();
+        return ResponseEntity.ok(usuarioDTO);
+    }
 }

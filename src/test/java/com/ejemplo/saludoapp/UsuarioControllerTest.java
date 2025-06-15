@@ -5,6 +5,7 @@ import com.ejemplo.saludoapp.DTO.UsuarioCreateDTO;
 import com.ejemplo.saludoapp.DTO.UsuarioDTO;
 import com.ejemplo.saludoapp.controller.UsuarioController;
 import com.ejemplo.saludoapp.exception.UsuarioNoEncontradoException;
+import com.ejemplo.saludoapp.model.Usuario;
 import com.ejemplo.saludoapp.service.UsuarioService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -27,6 +31,20 @@ public class UsuarioControllerTest {
 
     @MockBean
     private UsuarioService usuarioService;
+
+    @Test
+    void listarUsuarios_deberiaRetornarListaDeUsuarios() throws Exception {
+        List<UsuarioDTO> usuarios = Arrays.asList(
+                new UsuarioDTO(1L, "andres", "andres@emeail.com", true),
+                new UsuarioDTO(2L, "jesus", "jesus@emeail.com", false)
+        );
+        when(usuarioService.listarTodosUsuarios()).thenReturn(usuarios);
+        mockMvc.perform(get("/usuario/todos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].nombre").value("andres"))
+                .andExpect(jsonPath("$[1].email").value("jesus@emeail.com"));
+    }
 
     @Test
     void eliminarUsuario_deberiaRetornarNoContent() throws Exception {

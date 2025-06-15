@@ -101,5 +101,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toDTOPage(usuarios);
     }
 
+    @Override
+    public List<UsuarioDTO> listarTodosUsuarios() {
+        return usuarioMapper.toDTOList(usuarioRepository.findAll());
+    }
+
 
 }

@@ -18,5 +18,6 @@ public interface UsuarioService {
     UsuarioDTO actualizar(Long id, UsuarioActualizarDTO usuarioActualizarDTO);
     UsuarioDTO buscarPorId(Long id);
     Page<UsuarioDTO> buscarPorNombre(String nombre, String email, Boolean activo, Pageable pageable);
+    List<UsuarioDTO> listarTodosUsuarios();
 
 }
