@@ -1,8 +1,13 @@
 package com.ejemplo.saludoapp.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UsuarioDTO {
     private Long id;
     private String nombre;
+    @Email(message = "Correo no valido")
+    @NotBlank(message = "No debe estar en blanco")
     private String email;
     private String clave;
     private boolean activo;

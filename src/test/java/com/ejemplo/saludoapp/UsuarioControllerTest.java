@@ -35,6 +35,22 @@ public class UsuarioControllerTest {
     }
 
     @Test
+    void crearUsuario_conEmailInvalido_deberiaRetornarError() throws Exception {
+        String invalido = """
+                {
+                    "nombre": "andres",
+                    "email": "no-es-correo-valido",
+                    "clave" :  "123456"
+                }
+                """;
+        mockMvc.perform(post("/usuario")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalido))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.email").value("Correo no valido"));
+    }
+
+    @Test
     void eliminarUsario_UsuarioNoEncontrado() throws Exception {
         doThrow(new UsuarioNoEncontradoException(1L))
                 .when(usuarioService).eliminar(1L);
