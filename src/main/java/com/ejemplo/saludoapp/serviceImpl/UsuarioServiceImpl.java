@@ -63,6 +63,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public UsuarioDTO crear(UsuarioCreateDTO  usuarioCreateDTO) {
         Usuario usuario = usuarioMapper.toEntity(usuarioCreateDTO);
+        usuario.setActivo(true);
         Usuario usuarioGuardar = usuarioRepository.save(usuario);
         return usuarioMapper.toDTO(usuarioGuardar);
     }
@@ -81,7 +82,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioMapper.actualizarDesdeDTO(usuario, usuarioExistente);
 
         Usuario actualizado = usuarioRepository.save(usuarioExistente);
-        return convertirToDTO(actualizado);
+        return usuarioMapper.toDTO(actualizado);
 
     }
 
