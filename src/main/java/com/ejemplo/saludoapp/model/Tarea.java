@@ -1,9 +1,7 @@
 package com.ejemplo.saludoapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 public class Tarea {
@@ -12,7 +10,13 @@ public class Tarea {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
+    private String descripcion;
     private boolean completada;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonIgnore
+    private Usuario usuario;
 
     public Tarea() {
     }

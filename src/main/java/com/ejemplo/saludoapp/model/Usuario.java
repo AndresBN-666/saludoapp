@@ -1,11 +1,13 @@
 package com.ejemplo.saludoapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Usuario {
@@ -13,15 +15,22 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
 
-    @Email(message = "Correo electronico no valido")
-    @NotBlank(message = "Correo no debe estar vacio")
     private String email;
 
     private String clave;
     private boolean activo;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_rol",
+                joinColumns = @JoinColumn(name = "usuario_id"),
+                inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private Set<Rol> roles = new HashSet();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Tarea> tareas = new ArrayList<>();
 
     public Usuario() {}
 
