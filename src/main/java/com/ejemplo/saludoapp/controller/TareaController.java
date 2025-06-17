@@ -1,7 +1,13 @@
 package com.ejemplo.saludoapp.controller;
 
+import com.ejemplo.saludoapp.DTO.tarea.TareaActualizarDTO;
+import com.ejemplo.saludoapp.DTO.tarea.TareaCreateDTO;
+import com.ejemplo.saludoapp.DTO.tarea.TareaDTO;
 import com.ejemplo.saludoapp.model.Tarea;
 import com.ejemplo.saludoapp.service.TareaService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +32,15 @@ public class TareaController {
     }
 
     @PostMapping
-    public Tarea crear(@RequestBody Tarea tarea){
-        return tareaService.guardarTarea(tarea);
+    public ResponseEntity<TareaDTO> crear(@RequestBody TareaCreateDTO tarea){
+        return new ResponseEntity<>(tareaService.crearTarea(tarea), HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TareaDTO> actualizar(@PathVariable Long id,
+                                               @RequestBody @Valid TareaActualizarDTO tarea){
+        return ResponseEntity.ok(tareaService.actualizarTarea(id,tarea));
+    }
+
 
 }
