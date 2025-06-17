@@ -1,5 +1,6 @@
 package com.ejemplo.saludoapp.exception;
 
+import com.ejemplo.saludoapp.exception.tarea.TareaNoEncontradaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsuarioNoEncontradoException.class)
     public ResponseEntity<Map<String,String>> handleUsuarioNoEncontrado(UsuarioNoEncontradoException ex){
         Map<String,String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error , HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TareaNoEncontradaException.class)
+    public ResponseEntity<Map<String,String>> TareaNoEncontrada(TareaNoEncontradaException ex){
+        Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error , HttpStatus.NOT_FOUND);
     }

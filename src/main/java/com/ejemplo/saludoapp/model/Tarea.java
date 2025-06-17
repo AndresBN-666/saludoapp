@@ -27,6 +27,30 @@ public class Tarea {
         this.completada = completada;
     }
 
+    public Tarea(Long id, String titulo, String descripcion, boolean completada, Usuario usuario) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.completada = completada;
+        this.usuario = usuario;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public Long getId() {
         return id;
     }
