@@ -7,6 +7,7 @@ import com.ejemplo.saludoapp.model.Tarea;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -28,5 +29,8 @@ public interface TareaMapper {
     void actualizarEntidadDesdeDto(TareaActualizarDTO dto, @MappingTarget Tarea entidad);
 
     List<TareaDTO> toDTOList(List<Tarea> tareas);
+    default Page<TareaDTO> toDTOPage(Page<Tarea> tareas){
+        return tareas.map(this :: toDTO);
+    }
 
 }

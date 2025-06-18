@@ -3,6 +3,7 @@ package com.ejemplo.saludoapp.serviceImpl;
 import com.ejemplo.saludoapp.DTO.tarea.TareaActualizarDTO;
 import com.ejemplo.saludoapp.DTO.tarea.TareaCreateDTO;
 import com.ejemplo.saludoapp.DTO.tarea.TareaDTO;
+import com.ejemplo.saludoapp.especificaciones.TareaSpecifications;
 import com.ejemplo.saludoapp.exception.UsuarioNoEncontradoException;
 import com.ejemplo.saludoapp.exception.tarea.TareaNoEncontradaException;
 import com.ejemplo.saludoapp.mapper.TareaMapper;
@@ -11,6 +12,9 @@ import com.ejemplo.saludoapp.model.Usuario;
 import com.ejemplo.saludoapp.repository.TareaRepository;
 import com.ejemplo.saludoapp.repository.UsuarioRepository;
 import com.ejemplo.saludoapp.service.TareaService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,5 +76,23 @@ public class TareaServiceImpl implements TareaService {
         tareaExistente = tareaRepository.save(tareaExistente);
 
         return tareaMapper.toDTO(tareaExistente);
+    }
+
+    @Override
+    public void eliminarTarea(Long id) {
+        Tarea tarea = tareaRepository.findById(id)
+                .orElseThrow(()-> new TareaNoEncontradaException(id));
+        tareaRepository.delete(tarea);
+    }
+
+    @Override
+    public Page<TareaDTO> listarTeares(String titulo, Boolean completada, Long usuarioId, Pageable pageable) {
+        Specification<Tarea> spec = Specification.where(TareaSpecifications.tituloContiene(titulo))
+                .and(TareaSpecifications.completadaContiene(completada))
+                .and(TareaSpecifications.usuarioContiene(usuarioId));
+
+        Page<Tarea> tarea = tareaRepository.findAll(spec, pageable);
+        //return tarea.map(tareaMapper :: toDTO);
+        return tareaMapper.toDTOPage(tarea);
     }
 }
