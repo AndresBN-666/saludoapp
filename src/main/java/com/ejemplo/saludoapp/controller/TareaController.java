@@ -6,6 +6,9 @@ import com.ejemplo.saludoapp.DTO.tarea.TareaDTO;
 import com.ejemplo.saludoapp.model.Tarea;
 import com.ejemplo.saludoapp.service.TareaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,22 @@ public class TareaController {
     public ResponseEntity<TareaDTO> actualizar(@PathVariable Long id,
                                                @RequestBody @Valid TareaActualizarDTO tarea){
         return ResponseEntity.ok(tareaService.actualizarTarea(id,tarea));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarTarea(@PathVariable Long id){
+        tareaService.eliminarTarea(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/especificacion")
+    public ResponseEntity<Page<TareaDTO>> listarTareas(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) Boolean completada,
+            @RequestParam(required = false) Long usuarioId,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable
+    ){
+        return ResponseEntity.ok(tareaService.listarTeares(titulo,completada,usuarioId,pageable));
     }
 
 
