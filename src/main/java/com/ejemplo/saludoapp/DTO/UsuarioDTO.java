@@ -3,6 +3,8 @@ package com.ejemplo.saludoapp.DTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Set;
+
 public class UsuarioDTO {
     private Long id;
     private String nombre;
@@ -11,6 +13,7 @@ public class UsuarioDTO {
     private String email;
     private String clave;
     private boolean activo;
+    private Set<String> nombreRol;
 
 
     public UsuarioDTO() {
@@ -68,5 +71,13 @@ public class UsuarioDTO {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    public Set<String> getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(Set<String> nombreRol) {
+        this.nombreRol = nombreRol;
     }
 }

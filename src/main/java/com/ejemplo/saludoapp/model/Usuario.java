@@ -81,4 +81,20 @@ public class Usuario {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
+    }
+
+    public List<Tarea> getTareas() {
+        return tareas;
+    }
+
+    public void setTareas(List<Tarea> tareas) {
+        this.tareas = tareas;
+    }
 }
