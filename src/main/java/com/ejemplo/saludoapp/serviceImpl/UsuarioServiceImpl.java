@@ -6,25 +6,33 @@ import com.ejemplo.saludoapp.DTO.UsuarioDTO;
 import com.ejemplo.saludoapp.especificaciones.UsuarioSpecifications;
 import com.ejemplo.saludoapp.exception.UsuarioNoEncontradoException;
 import com.ejemplo.saludoapp.mapper.UsuarioMapper;
+import com.ejemplo.saludoapp.model.Rol;
 import com.ejemplo.saludoapp.model.Usuario;
+import com.ejemplo.saludoapp.repository.RolRepository;
 import com.ejemplo.saludoapp.repository.UsuarioRepository;
 import com.ejemplo.saludoapp.service.UsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
+    private final PasswordEncoder passwordEncoder;
+    private final RolRepository rolRepository;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+    public UsuarioServiceImpl(PasswordEncoder passwordEncoder, RolRepository rolRepository, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+        this.passwordEncoder = passwordEncoder;
+        this.rolRepository = rolRepository;
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
     }
@@ -62,8 +70,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioDTO crear(UsuarioCreateDTO  usuarioCreateDTO) {
+
         Usuario usuario = usuarioMapper.toEntity(usuarioCreateDTO);
+        //cifrar contraseña
+        usuario.setClave(passwordEncoder.encode(usuarioCreateDTO.getClave()));
+
+        //Se obtiene los roles de la bd
+        Set<Rol> roles = usuarioCreateDTO.getRolesIds().stream()
+                        .map(id -> rolRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Rol con id " + id + " no encontrado")))
+                                .collect(Collectors.toSet());
+
+
         usuario.setActivo(true);
+        usuario.setRoles(roles);
+
         Usuario usuarioGuardar = usuarioRepository.save(usuario);
         return usuarioMapper.toDTO(usuarioGuardar);
     }

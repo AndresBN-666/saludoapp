@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,10 @@ import java.util.List;
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
+
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+
     }
 
     @GetMapping("/paginado")

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
+
 public class UsuarioCreateDTO {
 
     @NotBlank(message = "No puede estar en blanco")
@@ -16,6 +18,8 @@ public class UsuarioCreateDTO {
     @NotBlank(message = "Clave no puede estar vacio")
     @Size(min = 6, message = "La contraseña debe tener como minimo 6 caracteres")
     private String clave;
+
+    private Set<Long> rolesIds;
 
     public UsuarioCreateDTO() {
     }
@@ -48,5 +52,13 @@ public class UsuarioCreateDTO {
 
     public void setClave(@NotBlank(message = "Clave no puede estar vacio") @Size(min = 6, message = "La contraseña debe tener como minimo 6 caracteres") String clave) {
         this.clave = clave;
+    }
+
+    public Set<Long> getRolesIds() {
+        return rolesIds;
+    }
+
+    public void setRolesIds(Set<Long> rolesIds) {
+        this.rolesIds = rolesIds;
     }
 }
