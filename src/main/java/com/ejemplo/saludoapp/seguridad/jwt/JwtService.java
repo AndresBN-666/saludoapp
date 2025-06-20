@@ -3,11 +3,13 @@ package com.ejemplo.saludoapp.seguridad.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -19,7 +21,16 @@ public class JwtService {
     }
 
     public String generarToken(UserDetails userDetails){
+        Map<String, Object> claims = new HashMap<>();
+
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        claims.put("roles", authorities.stream()
+                .map(GrantedAuthority ::  getAuthority)
+                .collect(Collectors.toList())
+        );
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24))

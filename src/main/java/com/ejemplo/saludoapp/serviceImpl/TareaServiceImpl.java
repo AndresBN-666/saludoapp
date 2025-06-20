@@ -15,6 +15,7 @@ import com.ejemplo.saludoapp.service.TareaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +72,20 @@ public class TareaServiceImpl implements TareaService {
     public TareaDTO actualizarTarea(Long id,TareaActualizarDTO tarea) {
         Tarea tareaExistente = tareaRepository.findById(id)
                 .orElseThrow(() -> new TareaNoEncontradaException(id));
+
+        //Obtener Usuario Autenticado
+        String emailAutenticado = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuarioAutenticado = usuarioRepository.findByEmail(emailAutenticado)
+                        .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+
+        // Validar si es el dueño o tiene rol Admin
+        boolean esAdmin = usuarioAutenticado.getRoles().stream()
+                        .anyMatch(rol -> rol.getNombre().equalsIgnoreCase("ADMIN"));
+
+        if (!tareaExistente.getUsuario().getId().equals(usuarioAutenticado.getId()) && !esAdmin) {
+            throw new RuntimeException("No tienes permisos para actualizar esta tarea.");
+        }
+
 
         tareaMapper.actualizarEntidadDesdeDto(tarea, tareaExistente);
         tareaExistente = tareaRepository.save(tareaExistente);
