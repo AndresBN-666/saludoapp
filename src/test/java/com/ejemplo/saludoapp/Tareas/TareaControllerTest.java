@@ -1,5 +1,6 @@
 package com.ejemplo.saludoapp.Tareas;
 
+import com.ejemplo.saludoapp.controller.TareaController;
 import com.ejemplo.saludoapp.seguridad.jwt.JwtAuthenticationFilter;
 import com.ejemplo.saludoapp.service.TareaService;
 import com.ejemplo.saludoapp.serviceImpl.UserDetailsServiceImpl;
@@ -19,7 +20,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TareaControllerTest.class)
+@WebMvcTest(TareaController.class)
 public class TareaControllerTest {
 
     @Autowired
