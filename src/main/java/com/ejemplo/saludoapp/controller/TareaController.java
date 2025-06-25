@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,16 +25,19 @@ public class TareaController {
         this.tareaService = tareaService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Tarea> obtenerTareas() {
         return tareaService.listarTodas();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/completadas")
     public List<Tarea> tareasCompletadas(){
         return tareaService.listarCompletadas();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TareaDTO> crear(@RequestBody TareaCreateDTO tarea){
         return new ResponseEntity<>(tareaService.crearTarea(tarea), HttpStatus.CREATED);

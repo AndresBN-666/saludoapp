@@ -12,10 +12,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuario")
@@ -61,11 +68,30 @@ public class UsuarioController {
         }*/
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/activos")
     public List<UsuarioDTO> listarActivos(){
         return usuarioService.listarActivos();
     }
 
+    @GetMapping("/perfil")
+    public ResponseEntity<Map<String, Object>> obtenerPerfilActual() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("usuario", auth.getName());
+
+        List<String> roles = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        response.put("roles", roles);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public UsuarioDTO buscarPorId(@PathVariable Long id) {
         return usuarioService.buscarPorId(id);
@@ -83,6 +109,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> editarUsuario(@RequestBody @Valid UsuarioActualizarDTO usuario,
                                  @PathVariable Long id) {
